@@ -1,13 +1,13 @@
 /**
- * @name WakaTime
- * @author WakaTime
+ * @name DevFlow
+ * @author DevFlow
  * @description Automatic time tracking and stats about your Discord usage.
  * @version 1.0.1
  */
 
 const fs = require('fs');
 
-module.exports = class WakaTime {
+module.exports = class DevFlow {
   constructor(meta) {
     this.meta = meta;
     this.lastHeartbeatAt = 0;
@@ -15,17 +15,17 @@ module.exports = class WakaTime {
   }
 
   start() {
-    console.log(`Initializing WakaTime plugin v${this.meta.version}`);
+    console.log(`Initializing DevFlow plugin v${this.meta.version}`);
     if (readSetting(this.homeDirectory() + '/.wakatime.cfg', 'settings', 'debug') == 'true') {
       this.debug = true;
-      console.log('WakaTime debug mode enabled');
+      console.log('DevFlow debug mode enabled');
     }
     this.handler = this.handleAction.bind(this);
     document.addEventListener('click', this.handler);
   }
 
   stop() {
-    console.log('Unloading WakaTime plugin');
+    console.log('Unloading DevFlow plugin');
     document.removeEventListener('click', this.handler);
   }
 
@@ -57,7 +57,7 @@ module.exports = class WakaTime {
     const key = readSetting(this.homeDirectory() + '/.wakatime.cfg', 'settings', 'api_key');
     if (!key) return;
     if (this.debug) {
-      console.log(`Sending heartbeat to WakaTime API.`);
+      console.log(`Sending heartbeat to DevFlow API.`);
     }
 
     const url = 'https://api.wakatime.com/api/v1/users/current/heartbeats';
@@ -66,7 +66,7 @@ module.exports = class WakaTime {
       entity: 'Discord',
       type: 'app',
       //project: project,
-      plugin: `${this.osName()} betterdiscord/${BdApi.version} discord-wakatime/${this.meta.version}`,
+      plugin: `${this.osName()} betterdiscord/${BdApi.version} devflow-discord/${this.meta.version}`,
     });
     const headers = {
       Authorization: `Basic ${key}`,
@@ -81,7 +81,7 @@ module.exports = class WakaTime {
       headers: headers,
     });
     const data = await response.text();
-    if (response.status < 200 || response.status >= 300) console.warn(`WakaTime API Error ${response.status}: ${data}`);
+    if (response.status < 200 || response.status >= 300) console.warn(`DevFlow API Error ${response.status}: ${data}`);
   }
 
   osName() {
@@ -150,14 +150,14 @@ function readSetting(file, section, key) {
         }
       }
     }
-  } catch (e) {}
+  } catch (e) { }
   return '';
 }
 
 function readFile(file) {
   try {
     return fs.readFileSync(file, 'utf-8');
-  } catch (e) {}
+  } catch (e) { }
   return '';
 }
 
